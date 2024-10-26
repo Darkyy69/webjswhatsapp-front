@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,available,price,shortened_question
+0,null,"يرجى اختيار مشروب","Veuillez choisir une boisson","Please choose a drink",yes,,Boisson
+1,27,"سليكتو 1 لتر","Selecto 1L","Selecto 1L",yes,100
+2,27,"سليكتو 2 لتر","Selecto 2L","Selecto 2L",yes,200
+3,27,"حمود 1 لتر","Hamoud 1L","Hamoud 1L",yes,100
+4,27,"حمود علبة","Hamoud Canette","Hamoud Can",yes,50
+5,29,"لا","Non","No",yes,,

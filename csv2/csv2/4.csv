@@ -1,0 +1,9 @@
+input,output,text_ar,text_fr,text_en,shortened_question
+0,null,"يرجى إدخال الرقم المقابل لفئة الطعام المطلوبة","Veuillez entrer le numéro correspondant à la catégorie de nourriture souhaitée","Please enter the number corresponding to the food category you want",Catégorie
+1,5,"بيتزا","Pizzas","Pizzas"
+2,6,"ساندويتشات","Sandwiches","Sandwiches"
+3,7,"تاكوس","Tacos","Tacos"
+4,8,"هامبرجر","Hamburgers","Hamburgers"
+5,9,"أطباق","Plats","Dishes"
+6,10,"سلطات","Salades","Salads"
+7,11,"غراتان","Gratins","Gratins"

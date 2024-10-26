@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,available,shortened_question
+0,null,"يرجى اختيار الكمية (لا تزيد عن 5)","Veuillez choisir la quantité (pas plus de 5)","Please choose the quantity (not more than 5)",yes,Quantité boisson
+1,28,1,1,1,no
+2,28,2,2,2,no
+3,28,3,3,3,no
+4,28,4,4,4,no
+5,28,5,5,5,no

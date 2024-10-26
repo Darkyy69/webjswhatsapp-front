@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,,"يرجى اختيار الحشوة للربع الثاني","Veuillez choisir la garniture pour le deuxième quart","Please choose the topping for the second quarter",,Deuxième garniture
+1,38,"دجاج","Poulet","Chicken",
+2,38,"تون","Thon","Tuna",
+3,38,"مرقاز","Merguez","Merguez",
+4,38,"لحم مفروم","Viande hachée","Minced Meat",
+5,38,"فطر","Champignons","Mushrooms",

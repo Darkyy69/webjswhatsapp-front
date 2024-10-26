@@ -1,0 +1,15 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى إدخال الرقم المقابل لبيتزا ميغا المطلوبة","Veuillez entrer le numéro correspondant à la Pizza Mega souhaitée","Please enter the number corresponding to the Pizza Mega you want",,Pizza Mega
+1,18,بيتزا مارغريتا,Pizza Margherite,Margherita Pizza,1400
+2,18,بيتزا لحم مفروم,Pizza Viande hachée,Minced Meat Pizza,1600
+3,18,بيتزا الدجاج,Pizza Poulet,Chicken Pizza,1800
+4,18,بيتزا الفطر,Pizza Champignons,Mushroom Pizza,1800
+5,18,بيتزا التونة,Pizza Thon,Tuna Pizza,1900
+6,18,بيتزا المرقاز,Pizza Merguez,Merguez Pizza,1900
+7,18,بيتزا نباتية,Pizza Végétarienne,Vegetarian Pizza,1900
+8,18,بيتزا ٣ أجبان,Pizza 3 Fromages,Three Cheese Pizza,2000
+9,18,بيتزا ٤ فصول,Pizza 4 Saisons,Four Seasons Pizza,2400
+10,18,بيتزا ماريناس,Pizza Marinas,Marinas Pizza,2600
+11,18,بيتزا رويال,Pizza Royale,Royal Pizza,2800
+12,18,بيتزا صياد,Pizza Pêcheur,Fisherman’s Pizza,3000
+13,30,"بيتزا مخصصة (اختر الإضافات)","Pizza Personnalisée (Choisissez vos garnitures)","Custom Pizza (Choose your toppings)",2000 - 2200

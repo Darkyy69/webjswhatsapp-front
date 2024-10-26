@@ -1,0 +1,4 @@
+input,output,text_ar,text_fr,text_en,shortened_question
+0,null,"هل تريد إضافة مشروب آخر إلى طلبك؟","Voulez-vous ajouter une autre boisson à votre commande?","Would you like to add another drink to your order?",Autre Boisson
+1,26,"إضافة مشروب آخر","Ajouter une autre boisson","Add another drink"
+2,29,"لا","Non","No"

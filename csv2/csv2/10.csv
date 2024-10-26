@@ -1,0 +1,8 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى إدخال الرقم المقابل للسلطة المطلوبة","Veuillez entrer le numéro correspondant à la salade souhaitée","Please enter the number corresponding to the salad you want",,Salade
+1,23,سلطة تونة,Salade de thon,Tuna Salad,250
+2,23,سلطة متنوعة,Salade Variée,Mixed Salad,200
+3,23,سلطة أرز,Salade de riz,Rice Salad,250
+4,23,سلطة دجاج,Salade de poulet,Chicken Salad,250
+5,23,حميس,Hmiss,Hmiss (Grilled Pepper Salad),200
+6,23,زيتون مكسر,Olives cassées,Broken Olives,200

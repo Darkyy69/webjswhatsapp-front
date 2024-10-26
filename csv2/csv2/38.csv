@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,,"يرجى اختيار الحشوة للربع الثالث","Veuillez choisir la garniture pour le troisème quart","Please choose the topping for the third quarter",,Troisième garniture
+1,39,"دجاج","Poulet","Chicken",
+2,39,"تون","Thon","Tuna",
+3,39,"مرقاز","Merguez","Merguez",
+4,39,"لحم مفروم","Viande hachée","Minced Meat",
+5,39,"فطر","Champignons","Mushrooms",

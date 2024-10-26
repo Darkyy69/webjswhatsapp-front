@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى إدخال الرقم المقابل للبرجر المطلوب","Veuillez entrer le numéro correspondant au burger souhaité","Please enter the number corresponding to the burger you want",Burger
+1,21,جبنة برجر,Cheese Burger,Cheese Burger,180
+2,21,دجاج بالجبنة,Chicken Cheese,Chicken Cheese,180
+3,21,هامبورجر,Hamburger,Hamburger,180
+4,21,برجر جبنة مزدوج,Double Cheese Burger,Double Cheese Burger,300
+5,21,ماريناس بيج جبنة,Marinas Big Cheese,Marinas Big Cheese,400

@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,available,shortened_question
+0,null,"يرجى إدخال الكمية المراد طلبها (لا تزيد عن 5)","Veuillez entrer la quantité à commander (pas plus de 5)","Please enter the quantity to order (not more than 5)",yes,Quantité nourriture
+1,26,1,1,1,no
+2,26,2,2,2,no
+3,26,3,3,3,no
+4,26,4,4,4,no
+5,26,5,5,5,no

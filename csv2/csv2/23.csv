@@ -1,0 +1,13 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى اختيار الإضافات. لتخطي هذه المرحلة، اضغط مباشرة على 11، أو اختر الإضافات التي ترغب في إضافتها ثم اضغط على 11 للتأكيد","Veuillez choisir vos suppléments. Pour sauter cette étape, appuyez directement sur 11, sinon choisissez les suppléments à ajouter, puis tapez sur 11 pour confirmer","Please choose your toppings. To skip this step, press 11 directly, or select the toppings to add, then press 11 to confirm",,Supplément
+1,23,كاتشب,Ketchup,Ketchup,0
+2,23,خردل,Moutarde,Mustard,0
+3,23,مايونيز,Mayonnaise,Mayonnaise,0
+4,23,صلصة باربكيو,SauceBBQ,BBQ Sauce,0
+5,23,دجاج,Poulet,Chicken,100
+6,23,بيبروني,Peperonni,Pepperoni,100
+7,23,لحم الخنزير,Bacon,Bacon,100
+8,23,جبنة شيدر,Cheddar,Cheddar,100
+9,23,جبنة سويسرية,Suisse,Swiss,100
+10,23,روبيان,Crevettes,Shrimp,100
+11,25,فلفل أحمر,Confirmer les supplements,Confirm supplements,0

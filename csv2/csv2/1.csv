@@ -1,0 +1,5 @@
+input,output,text_ar,text_fr,text_en,code
+0,,"Bienvenue ! Pour commencer veuillez choisir une langue en tapant le numéro correspondant 🌍: ","Bienvenue ! Pour commencer veuillez choisir une langue en tapant le numéro correspondant 🌍","Bienvenue ! Pour commencer veuillez choisir une langue en tapant le numéro correspondant 🌍",
+1,4,العربية,العربية,العربية,ar
+2,4,français,français,français,fr
+3,4,English,English,English,en

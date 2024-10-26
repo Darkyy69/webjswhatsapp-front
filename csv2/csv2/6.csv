@@ -1,0 +1,7 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى إدخال الرقم المقابل للسندويتش المطلوب","Veuillez entrer le numéro correspondant au sandwich souhaité","Please enter the number corresponding to the sandwich you want",,Sandwiche
+1,15,كومبليت اسكالوب,Complet Escalope,Escalope Sandwich,300
+2,15,كومبليت لحم مفروم,Complet Viande hachée,Minced Meat Sandwich,300
+3,15,كومبليت دجاج متبل,Complet Poulet Mariné,Marinated Chicken Sandwich,300
+4,15,كومبليت دجاج مقلي,Complet Poulet Pané,Breaded Chicken Sandwich,400
+5,15,كومبليت كبدة متبلة,Complet Foie Mariné,Marinated Liver Sandwich,400

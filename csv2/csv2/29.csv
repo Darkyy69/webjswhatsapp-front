@@ -1,0 +1,4 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"تم تحديث الطلب. العودة إلى القائمة الرئيسية أو تأكيد طلبك؟ يرجى إدخال الرقم المقابل","Commande mise à jour. Revenir au menu principal ou confirmer votre commande? Veuillez entrer le numéro correspondant","Order updated. Return to the main menu or confirm your order? Please enter the corresponding number",,
+1,3,"العودة إلى القائمة الرئيسية","Revenir au menu principal","Return to the main menu",
+2,0,"تأكيد الطلب","Confirmer la commande","Confirm the order",

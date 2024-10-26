@@ -1,0 +1,5 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,,"يرجى إدخال الرقم المقابل للتقسيم المطلوب","Veuillez entrer le numéro correspondant à la partition souhaitée","Please enter the number corresponding to the desired partition",,Pizza Personnalisée
+1,31,"تقسيمان (بيتزا مقسمة إلى نصفين)","Deux partitions (Pizza divisée en deux moitiés)","Two partitions (Pizza divided into two halves)",2000
+2,33,"ثلاثة تقسيمات (بيتزا مقسمة إلى ثلاثة أثلاث)","Trois partitions (Pizza divisée en trois tiers)","Three partitions (Pizza divided into three thirds)",2100
+3,36,"أربعة تقسيمات (بيتزا مقسمة إلى أربعة أرباع)","Quatre partitions (Pizza divisée en quatre quarts)","Four partitions (Pizza divided into four quarters)",2200

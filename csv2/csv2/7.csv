@@ -1,0 +1,8 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى إدخال الرقم المقابل للتاكوس المطلوب","Veuillez entrer le numéro correspondant au tacos souhaité","Please enter the number corresponding to the tacos you want",,Tacos
+1,20,تاكوس دجاج مقلي,Tacos Poulet Pané,Breaded Chicken Tacos,500
+2,20,تاكوس دجاج متبل,Tacos Poulet Mariné,Marinated Chicken Tacos,500
+3,20,تاكوس لحم مفروم,Tacos Viande hachée,Minced Meat Tacos,500
+4,20,تاكوس اسكالوب,Tacos Escalope,Escalope Tacos,500
+5,20,تاكوس كبدة,Tacos Foie,Liver Tacos,600
+6,20,تاكوس ميكس,Tacos Mixte,Mixed Tacos,600

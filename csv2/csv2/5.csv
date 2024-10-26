@@ -1,0 +1,5 @@
+input,output,text_ar,text_fr,text_en,shortened_question
+0,null,"يرجى إدخال الرقم المقابل لحجم البيتزا المطلوب","Veuillez entrer le numéro correspondant à la taille de pizza souhaitée","Please enter the number corresponding to the pizza size you want",Taille Pizza
+1,12,"عادي","Simple","Simple"
+2,13,"سيمي","Semi","Semi"
+3,14,"ميغا","Mega","Mega"

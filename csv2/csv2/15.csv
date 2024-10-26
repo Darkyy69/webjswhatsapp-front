@@ -1,0 +1,4 @@
+input,output,text_ar,text_fr,text_en,shortened_question
+0,null,"هل تريد أخذ سندويتش عادي أو ثلاث أنواع من الجبن؟ أدخل الرقم المقابل","Voulez-vous prendre un sandwich simple ou 3 fromages? Entrez le numéro correspondant","Would you like to take a simple sandwich or 3 cheese sandwich? Enter the corresponding number",Simple ou 3 Fromages
+1,19,"سندويتش عادي","Sandwich simple","Simple sandwich"
+2,19,"ثلاث أنواع من الجبن (100 دينار إضافي)","3 Fromages (100 Da supplémentaire)","3 Cheese (100 Da extra)"

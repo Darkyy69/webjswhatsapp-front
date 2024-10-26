@@ -1,0 +1,14 @@
+input,output,text_ar,text_fr,text_en,price,shortened_question
+0,null,"يرجى إدخال الرقم المقابل لبيتزا سيمي المطلوبة","Veuillez entrer le numéro correspondant à la Pizza Semi souhaitée","Please enter the number corresponding to the Pizza Semi you want",,Pizza Semi
+1,16,بيتزا مارغاريتا,Pizza Margherite,Margherita Pizza,1000
+2,17,بيتزا لحم مفروم,Pizza Viande hachée,Minced Meat Pizza,1300
+3,17,بيتزا الدجاج,Pizza Poulet,Chicken Pizza,1400
+4,17,بيتزا الفطر,Pizza Champignons,Mushroom Pizza,1400
+5,17,بيتزا التونة,Pizza Thon,Tuna Pizza,1500
+6,17,بيتزا المرقاز,Pizza Merguez,Merguez Pizza,1500
+7,17,بيتزا نباتية,Pizza Végétarienne,Vegetarian Pizza,1500
+8,17,بيتزا ٣ أجبان,Pizza 3 Fromages,Three Cheese Pizza,1500
+9,17,بيتزا ٤ فصول,Pizza 4 Saisons,Four Seasons Pizza,1800
+10,17,بيتزا ماريناس,Pizza Marinas,Marinas Pizza,2000
+11,17,بيتزا رويال,Pizza Royale,Royal Pizza,2400
+12,17,بيتزا صياد,Pizza Pêcheur,Fisherman’s Pizza,2500
