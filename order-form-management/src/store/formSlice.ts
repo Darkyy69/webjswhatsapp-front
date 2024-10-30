@@ -2,12 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type Question = {
   input: string;
-  text_ar: string;
   text_fr: string;
-  text_en: string;
   price?: string;
   linkedForm?: string | null;
   editable: boolean;
+  showPrice: boolean;
 };
 
 export type Form = {
@@ -19,7 +18,8 @@ export type Form = {
     | "personnalise"
     | "nourriture"
     | "supplements"
-    | "boissons";
+    | "boissons"
+    | "gratins";
   companyName?: string;
   mainQuestion: Question;
   questions: Question[];
@@ -30,6 +30,7 @@ export type FormSection = {
   id: string;
   name: string;
   forms: Form[];
+  isDefault: boolean;
 };
 
 interface FormsState {
@@ -45,10 +46,9 @@ const createDefaultQuestion = (
 ): Question => {
   const question: Question = {
     input,
-    text_ar: "",
     text_fr,
-    text_en: "",
     editable: true,
+    showPrice: false,
   };
   if (!isMain) {
     question.linkedForm = null;
@@ -61,7 +61,7 @@ const accueilForm: Form = {
   id: "accueil",
   name: "Message de bienvenue",
   type: "accueil",
-  companyName: "[Nom de l'entreprise]",
+  companyName: "",
   mainQuestion: createDefaultQuestion(
     "Bienvenue ! Comment puis-je vous aider ?",
     "0",
@@ -91,37 +91,43 @@ const menuForm: Form = {
 const initialState: FormsState = {
   sections: [
     {
-      id: "default",
-      name: "Formulaires par défaut",
+      id: "bienvenue",
+      name: "Bienvenue",
       forms: [accueilForm],
+      isDefault: true,
     },
     {
       id: "menu",
       name: "Menu",
       forms: [menuForm],
+      isDefault: true,
     },
     {
       id: "nourriture",
       name: "Nourriture",
       forms: [],
+      isDefault: true,
     },
     {
       id: "supplements",
       name: "Suppléments",
       forms: [],
+      isDefault: true,
     },
     {
       id: "boissons",
       name: "Boissons",
       forms: [],
+      isDefault: true,
     },
     {
-      id: "personnalise",
-      name: "Formulaires personnalisés",
+      id: "gratins",
+      name: "Gratins",
       forms: [],
+      isDefault: true,
     },
   ],
-  currentSectionId: "default",
+  currentSectionId: "bienvenue",
   currentFormId: "accueil",
 };
 
@@ -181,7 +187,9 @@ const formsSlice = createSlice({
       }
     },
     deleteSection: (state, action: PayloadAction<string>) => {
-      state.sections = state.sections.filter((s) => s.id !== action.payload);
+      state.sections = state.sections.filter(
+        (s) => s.id !== action.payload && !s.isDefault
+      );
       if (state.currentSectionId === action.payload) {
         state.currentSectionId =
           state.sections.length > 0 ? state.sections[0].id : null;
@@ -189,6 +197,14 @@ const formsSlice = createSlice({
     },
     setCurrentSection: (state, action: PayloadAction<string | null>) => {
       state.currentSectionId = action.payload;
+    },
+    reorderSections: (
+      state,
+      action: PayloadAction<{ sourceIndex: number; destinationIndex: number }>
+    ) => {
+      const { sourceIndex, destinationIndex } = action.payload;
+      const [removed] = state.sections.splice(sourceIndex, 1);
+      state.sections.splice(destinationIndex, 0, removed);
     },
   },
 });
@@ -202,6 +218,7 @@ export const {
   updateSection,
   deleteSection,
   setCurrentSection,
+  reorderSections,
 } = formsSlice.actions;
 
 export default formsSlice.reducer;

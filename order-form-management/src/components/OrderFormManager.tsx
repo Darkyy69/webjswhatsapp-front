@@ -9,7 +9,10 @@ import {
   deleteForm,
   setCurrentForm,
   addSection,
+  updateSection,
+  deleteSection,
   setCurrentSection,
+  reorderSections,
   Form,
   Question,
   FormSection,
@@ -17,14 +20,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
 import {
   Select,
@@ -51,13 +53,15 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Switch } from "@/components/ui/switch";
 import {
   PlusCircle,
   Trash2,
   Link,
   Save,
   FolderPlus,
-  HelpCircle,
+  Edit,
+  GripHorizontal,
 } from "lucide-react";
 import {
   Tooltip,
@@ -65,6 +69,38 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  horizontalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
+function SortableTab({ section, children }) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: section.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+      {children}
+    </div>
+  );
+}
 
 export default function OrderFormManager() {
   const dispatch = useDispatch();
@@ -85,6 +121,14 @@ export default function OrderFormManager() {
   const [linkSource, setLinkSource] = useState<{ input: string } | null>(null);
   const [newSectionName, setNewSectionName] = useState("");
   const [isNewSectionModalOpen, setIsNewSectionModalOpen] = useState(false);
+  const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   useEffect(() => {
     if (sections.length > 0 && !currentSectionId) {
@@ -103,10 +147,9 @@ export default function OrderFormManager() {
       type: "personnalise",
       mainQuestion: {
         input: "0",
-        text_ar: "",
         text_fr: "",
-        text_en: "",
         editable: true,
+        showPrice: false,
       },
       questions: [],
       globalLink: null,
@@ -118,12 +161,11 @@ export default function OrderFormManager() {
     if (!currentForm) return;
     const newQuestion: Question = {
       input: (currentForm.questions.length + 1).toString(),
-      text_ar: "",
       text_fr: "",
-      text_en: "",
       price: "",
       linkedForm: null,
       editable: true,
+      showPrice: false,
     };
     dispatch(
       updateForm({
@@ -193,6 +235,7 @@ export default function OrderFormManager() {
       id: Date.now().toString(),
       name: newSectionName.trim(),
       forms: [],
+      isDefault: false,
     };
     dispatch(addSection(newSection));
     setNewSectionName("");
@@ -205,6 +248,23 @@ export default function OrderFormManager() {
       .flatMap((s) => s.forms)
       .find((f) => f.id === formId);
     return linkedForm ? linkedForm.name : "Formulaire inconnu";
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = sections.findIndex(
+        (section) => section.id === active.id
+      );
+      const newIndex = sections.findIndex((section) => section.id === over.id);
+      dispatch(
+        reorderSections({
+          sourceIndex: oldIndex,
+          destinationIndex: newIndex,
+        })
+      );
+    }
   };
 
   const renderQuestionFields = (question: Question, index: number) => (
@@ -230,19 +290,8 @@ export default function OrderFormManager() {
         )}
       </div>
       <div>
-        <Label htmlFor={`text_ar-${question.input}`}>Texte en arabe</Label>
-        <Textarea
-          id={`text_ar-${question.input}`}
-          value={question.text_ar}
-          onChange={(e) =>
-            updateQuestion(question.input, { text_ar: e.target.value })
-          }
-          dir="rtl"
-        />
-      </div>
-      <div>
         <Label htmlFor={`text_fr-${question.input}`}>Texte en français</Label>
-        <Textarea
+        <Input
           id={`text_fr-${question.input}`}
           value={question.text_fr}
           onChange={(e) =>
@@ -250,17 +299,21 @@ export default function OrderFormManager() {
           }
         />
       </div>
-      <div>
-        <Label htmlFor={`text_en-${question.input}`}>Texte en anglais</Label>
-        <Textarea
-          id={`text_en-${question.input}`}
-          value={question.text_en}
-          onChange={(e) =>
-            updateQuestion(question.input, { text_en: e.target.value })
-          }
-        />
-      </div>
       {question.input !== "0" && (
+        <div className="flex items-center space-x-2">
+          <Switch
+            id={`show-price-${question.input}`}
+            checked={question.showPrice}
+            onCheckedChange={(checked) =>
+              updateQuestion(question.input, { showPrice: checked })
+            }
+          />
+          <Label htmlFor={`show-price-${question.input}`}>
+            Afficher le prix
+          </Label>
+        </div>
+      )}
+      {question.input !== "0" && question.showPrice && (
         <div>
           <Label htmlFor={`price-${question.input}`}>Prix</Label>
           <Input
@@ -296,228 +349,313 @@ export default function OrderFormManager() {
       <h1 className="text-3xl font-bold mb-4">
         Gestionnaire de formulaires de commande
       </h1>
-      <Tabs
-        value={currentSectionId || ""}
-        onValueChange={(value) => dispatch(setCurrentSection(value))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
       >
-        <div className="flex justify-between items-center mb-4">
-          <TabsList>
-            {sections.map((section) => (
-              <TabsTrigger key={section.id} value={section.id}>
-                {section.name}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button onClick={() => setIsNewSectionModalOpen(true)}>
-                  <FolderPlus className="mr-2 h-4 w-4" /> Nouvelle section
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Créer une nouvelle section pour organiser vos formulaires</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-        {sections.map((section) => (
-          <TabsContent key={section.id} value={section.id}>
-            <div className="flex gap-4">
-              <div className="w-1/3">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Formulaires</CardTitle>
-                    <CardDescription>
-                      Gérez vos formulaires de commande
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-2">
-                      {section.forms.map((form) => (
-                        <li
-                          key={form.id}
-                          className="flex justify-between items-center"
-                        >
-                          <Button
-                            variant={
-                              form.id === currentFormId ? "default" : "ghost"
-                            }
-                            onClick={() => dispatch(setCurrentForm(form.id))}
-                          >
-                            {form.name || "Formulaire sans nom"}
-                          </Button>
-                          {form.type === "personnalise" && (
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <Button
-                                    variant="destructive"
-                                    size="icon"
-                                    onClick={() =>
-                                      dispatch(deleteForm(form.id))
-                                    }
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>Supprimer ce formulaire</p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                  <CardFooter>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button onClick={addNewForm}>
-                            <PlusCircle className="mr-2 h-4 w-4" /> Nouveau
-                            formulaire
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Créer un nouveau formulaire dans cette section</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </CardFooter>
-                </Card>
-              </div>
-              <div className="w-2/3">
-                {currentForm && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>
+        <Tabs
+          value={currentSectionId || ""}
+          onValueChange={(value) => dispatch(setCurrentSection(value))}
+        >
+          <div className="mb-4 overflow-x-auto">
+            <TabsList className="inline-flex">
+              <SortableContext
+                items={sections.map((s) => s.id)}
+                strategy={horizontalListSortingStrategy}
+              >
+                {sections.map((section) => (
+                  <SortableTab key={section.id} section={section}>
+                    <TabsTrigger
+                      value={section.id}
+                      className="flex items-center space-x-2"
+                    >
+                      <GripHorizontal className="h-4 w-4" />
+                      {editingSectionId === section.id ? (
                         <Input
-                          value={currentForm.name}
+                          value={section.name}
                           onChange={(e) =>
                             dispatch(
-                              updateForm({
-                                ...currentForm,
+                              updateSection({
+                                ...section,
                                 name: e.target.value,
                               })
                             )
                           }
-                          className="text-2xl font-bold"
-                          placeholder="Ex: Menu Pizza, Desserts, Boissons"
+                          onBlur={() => setEditingSectionId(null)}
+                          autoFocus
+                          className="w-32"
                         />
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      {currentForm.type === "accueil" && (
-                        <div className="mb-4">
-                          <Label htmlFor="companyName">
-                            Nom de l'entreprise
-                          </Label>
-                          <Input
-                            id="companyName"
-                            value={currentForm.companyName}
-                            onChange={(e) =>
-                              dispatch(
-                                updateForm({
-                                  ...currentForm,
-                                  companyName: e.target.value,
-                                })
-                              )
-                            }
-                            placeholder="Entrez le nom de votre entreprise"
-                          />
+                      ) : (
+                        <span>{section.name}</span>
+                      )}
+                      {!section.isDefault && (
+                        <div className="flex space-x-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setEditingSectionId(section.id);
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              dispatch(deleteSection(section.id));
+                            }}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </div>
                       )}
-                      <div className="mb-4">
-                        <Label>Lien global</Label>
-                        <div className="flex items-center">
-                          <p className="flex-grow">
-                            {getLinkedFormName(currentForm.globalLink)}
-                          </p>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  onClick={() => openLinkModal("global")}
-                                >
-                                  <Link className="mr-2 h-4 w-4" /> Définir le
-                                  lien global
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  Lier ce formulaire à un autre formulaire pour
-                                  toutes les questions
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      </div>
-                      <Accordion type="single" collapsible>
-                        <AccordionItem value="main-question">
-                          <AccordionTrigger>
-                            Question principale
-                          </AccordionTrigger>
-                          <AccordionContent>
-                            {renderQuestionFields(currentForm.mainQuestion, -1)}
-                          </AccordionContent>
-                        </AccordionItem>
-                        {currentForm.questions.map((question, index) => (
-                          <AccordionItem
-                            key={question.input}
-                            value={question.input}
+                    </TabsTrigger>
+                  </SortableTab>
+                ))}
+              </SortableContext>
+            </TabsList>
+          </div>
+          <div className="flex justify-end mb-4">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={() => setIsNewSectionModalOpen(true)}>
+                    <FolderPlus className="mr-2 h-4 w-4" /> Nouvelle section
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    Créer une nouvelle section pour organiser vos formulaires
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+          {sections.map((section) => (
+            <TabsContent key={section.id} value={section.id}>
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="w-full md:w-1/3">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Formulaires</CardTitle>
+                      <CardDescription>
+                        Gérez vos formulaires de commande
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {section.forms.map((form) => (
+                          <li
+                            key={form.id}
+                            className="flex justify-between items-center"
                           >
-                            <AccordionTrigger>
-                              Question {index + 1}
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              {renderQuestionFields(question, index)}
-                            </AccordionContent>
-                          </AccordionItem>
-                        ))}
-                      </Accordion>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button onClick={addQuestion} className="mt-4">
-                              <PlusCircle className="mr-2 h-4 w-4" /> Ajouter
-                              une question
+                            <Button
+                              variant={
+                                form.id === currentFormId ? "default" : "ghost"
+                              }
+                              onClick={() => dispatch(setCurrentForm(form.id))}
+                              className={
+                                form.id === currentFormId
+                                  ? "bg-primary text-primary-foreground"
+                                  : ""
+                              }
+                            >
+                              {form.name || "Formulaire sans nom"}
                             </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>Ajouter une nouvelle question à ce formulaire</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                            {form.type === "personnalise" && (
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      variant="destructive"
+                                      size="icon"
+                                      onClick={() =>
+                                        dispatch(deleteForm(form.id))
+                                      }
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Supprimer ce formulaire</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
                     </CardContent>
                     <CardFooter>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button onClick={saveForm}>
-                              <Save className="mr-2 h-4 w-4" /> Enregistrer le
+                            <Button onClick={addNewForm}>
+                              <PlusCircle className="mr-2 h-4 w-4" /> Nouveau
                               formulaire
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>
-                              Sauvegarder les modifications apportées à ce
-                              formulaire
+                              Créer un nouveau formulaire dans cette section
                             </p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </CardFooter>
                   </Card>
-                )}
+                </div>
+                <div className="w-full md:w-2/3">
+                  {currentForm && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>
+                          <Label
+                            htmlFor="formName"
+                            className="text-lg font-semibold mb-2"
+                          >
+                            Nom du formulaire
+                          </Label>
+                          <Input
+                            id="formName"
+                            value={currentForm.name}
+                            onChange={(e) =>
+                              dispatch(
+                                updateForm({
+                                  ...currentForm,
+                                  name: e.target.value,
+                                })
+                              )
+                            }
+                            placeholder="Ex: Menu Pizza, Desserts, Boissons"
+                          />
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        {currentForm.type === "accueil" && (
+                          <div className="mb-4">
+                            <Label htmlFor="companyName">
+                              Nom de l'entreprise
+                            </Label>
+                            <Input
+                              id="companyName"
+                              value={currentForm.companyName}
+                              onChange={(e) =>
+                                dispatch(
+                                  updateForm({
+                                    ...currentForm,
+                                    companyName: e.target.value,
+                                  })
+                                )
+                              }
+                              placeholder="Entrez le nom de votre entreprise"
+                            />
+                          </div>
+                        )}
+                        <div className="mb-4">
+                          <Label>Lien global</Label>
+                          <div className="flex items-center">
+                            <p className="flex-grow">
+                              {getLinkedFormName(currentForm.globalLink)}
+                            </p>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => openLinkModal("global")}
+                                  >
+                                    <Link className="mr-2 h-4 w-4" /> Définir le
+                                    lien global
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>
+                                    Lier ce formulaire à un autre formulaire
+                                    pour toutes les questions
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </div>
+                        </div>
+                        <Accordion type="single" collapsible className="mb-4">
+                          <AccordionItem value="main-question">
+                            <AccordionTrigger className="font-bold text-lg">
+                              Question principale
+                            </AccordionTrigger>
+                            <AccordionContent>
+                              {renderQuestionFields(
+                                currentForm.mainQuestion,
+                                -1
+                              )}
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Accordion>
+                        <Accordion type="multiple">
+                          {currentForm.questions.map((question, index) => (
+                            <AccordionItem
+                              key={question.input}
+                              value={question.input}
+                            >
+                              <AccordionTrigger>
+                                <span className="font-bold">
+                                  Question {index + 1}:
+                                </span>{" "}
+                                {question.text_fr}
+                              </AccordionTrigger>
+                              <AccordionContent>
+                                {renderQuestionFields(question, index)}
+                              </AccordionContent>
+                            </AccordionItem>
+                          ))}
+                        </Accordion>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button onClick={addQuestion} className="mt-4">
+                                <PlusCircle className="mr-2 h-4 w-4" /> Ajouter
+                                une question
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Ajouter une nouvelle question à ce formulaire
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </CardContent>
+                      <CardFooter>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button onClick={saveForm}>
+                                <Save className="mr-2 h-4 w-4" /> Enregistrer le
+                                formulaire
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>
+                                Sauvegarder les modifications apportées à ce
+                                formulaire
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </CardFooter>
+                    </Card>
+                  )}
+                </div>
               </div>
-            </div>
-          </TabsContent>
-        ))}
-      </Tabs>
+            </TabsContent>
+          ))}
+        </Tabs>
+      </DndContext>
 
       <Dialog open={isLinkModalOpen} onOpenChange={setIsLinkModalOpen}>
         <DialogContent>
